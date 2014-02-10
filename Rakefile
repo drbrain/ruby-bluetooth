@@ -7,6 +7,8 @@ hoe = Hoe.spec 'bluetooth' do
   developer 'Jeremie Castagna', ''
   developer 'Esteve Fernandez', ''
 
+  self.readme_file = 'README.rdoc'
+
   extra_dev_deps << ['rake-compiler', '~> 0.6']
 
   self.clean_globs = %w[

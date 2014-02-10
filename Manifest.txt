@@ -1,6 +1,6 @@
 History.txt
 Manifest.txt
-README.txt
+README.rdoc
 Rakefile
 ext/bluetooth/extconf.rb
 ext/bluetooth/linux/ruby_bluetooth.c
