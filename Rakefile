@@ -9,7 +9,7 @@ hoe = Hoe.spec 'bluetooth' do
 
   self.readme_file = 'README.rdoc'
 
-  extra_dev_deps << ['rake-compiler', '~> 0.6']
+  dependency 'rake-compiler', '~> 0.6', :development
 
   self.clean_globs = %w[
     ext/bluetooth/Makefile
