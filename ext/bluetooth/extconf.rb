@@ -20,7 +20,14 @@ name = case RUBY_PLATFORM
          abort "unknown platform #{RUBY_PLATFORM}"
        end
 
-create_makefile 'bluetooth', name
+require 'pathname'
+
+local_dir   = Pathname(__FILE__).expand_path.dirname
+current_dir = Pathname Dir.pwd
+
+relative = local_dir.relative_path_from current_dir
+
+create_makefile 'bluetooth', File.join(relative, name)
 
 if RUBY_PLATFORM =~ /darwin/ then
   open 'Makefile', 'a' do |io|

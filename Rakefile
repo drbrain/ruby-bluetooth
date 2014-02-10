@@ -1,30 +1,33 @@
 require 'rubygems'
 require 'hoe'
-#require 'rake/extensiontask'
 
-hoe = Hoe.spec 'bluetooth' do
+begin
+  require 'rake/extensiontask'
+rescue LoadError => e
+  warn "\nmissing #{e.path} (for rake-compiler)" if e.respond_to? :path
+  warn "run: rake newb\n\n"
+end
+
+HOE = Hoe.spec 'bluetooth' do
   developer 'Eric Hodel', 'drbrain@segment7.net'
   developer 'Jeremie Castagna', ''
   developer 'Esteve Fernandez', ''
 
   self.readme_file = 'README.rdoc'
 
-  dependency 'rake-compiler', '~> 0.6', :development
-
-  self.clean_globs = %w[
-    ext/bluetooth/Makefile
-    ext/bluetooth/mkmf.log
-    ext/bluetooth/bluetooth.bundle
-    ext/bluetooth/*.o
-  ]
+  dependency 'rake-compiler', '~> 0.9', :development
 
   self.spec_extras[:extensions] = 'ext/bluetooth/extconf.rb'
 end
 
-#Rake::ExtensionTask.new 'bluetooth' do |ext|
-#  ext.source_pattern = '*/*.{c,cpp,h,m}'
-#  ext.gem_spec = hoe.spec
-#end
-#
-#task :test => :compile
+if Rake.const_defined? :ExtensionTask then
+  HOE.spec.files.delete_if { |file| file == '.gemtest' }
+
+  Rake::ExtensionTask.new 'bluetooth', HOE.spec do |ext|
+    ext.lib_dir = 'lib/bluetooth'
+    ext.source_pattern = '*.{c,m,h,cpp}'
+  end
+
+  task test: :compile
+end
 
