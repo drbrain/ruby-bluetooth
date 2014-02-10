@@ -1,6 +1,7 @@
 = ruby-bluetooth
 
-* http://github.com/yaksnrainbows/ruby-bluetooth
+home :: http://github.com/drbrain/ruby-bluetooth
+bugs :: http://github.com/drbrain/ruby-bluetooth/issues
 
 == DESCRIPTION:
 
@@ -12,7 +13,7 @@ A bluetooth library for ruby
 
 == INSTALL:
 
-  gem install ruby-bluetooth
+  gem install bluetooth
 
 == LICENSE:
 
