@@ -1,2 +1,4 @@
 *.swp
-/lib/bluetooth/bluetooth.{bundle,dll,so}
+/lib/bluetooth/bluetooth.bundle
+/lib/bluetooth/bluetooth.dll
+/lib/bluetooth/bluetooth.so
