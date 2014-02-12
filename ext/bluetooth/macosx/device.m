@@ -20,7 +20,7 @@ static IOBluetoothDevice *rbt_device_get(VALUE self) {
 
     memcpy(address.data, tmp, 6);
 
-    device = [IOBluetoothDevice withAddress: &address];
+    device = [IOBluetoothDevice deviceWithAddress: &address];
 
     return device;
 }
