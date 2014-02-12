@@ -1,3 +1,10 @@
+=== 1.1
+
+Minor enhancements:
+
+* Device#rssi, Device#link_quality now work for OS X 10.7 and newer.
+* Removed use of deprecated methods from the OS X extension.
+
 === 1.0
 
 * Major Enhancements
