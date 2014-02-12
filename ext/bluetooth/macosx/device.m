@@ -26,38 +26,24 @@ static IOBluetoothDevice *rbt_device_get(VALUE self) {
 }
 
 VALUE rbt_device_link_quality(VALUE self) {
-    HCIDelegate *delegate;
     IOBluetoothDevice *device;
-    IOBluetoothHostController *controller;
-    IOReturn status;
+    BluetoothHCIRSSIValue RSSI;
+    VALUE rssi;
     NSAutoreleasePool *pool;
 
     pool = [[NSAutoreleasePool alloc] init];
 
     device = rbt_device_get(self);
 
-    delegate = [[HCIDelegate alloc] init];
-    delegate.device = self;
-
-    controller = [IOBluetoothHostController defaultController];
-    [controller setDelegate: delegate];
-
-    status = [controller readLinkQualityForDevice: device];
-
-    if (status != noErr) {
-        [pool release];
-        return Qfalse;
-    }
-
-    CFRunLoopRun();
+    RSSI = [device RSSI];
 
     [pool release];
 
-    status = (IOReturn)NUM2INT(rb_iv_get(self, "@link_quality_error"));
+    rssi = INT2NUM(RSSI);
 
-    rbt_check_status(status, nil);
+    rb_iv_set(self, "@link_quality", rssi);
 
-    return rb_iv_get(self, "@link_quality");
+    return rssi;
 }
 
 VALUE rbt_device_open_connection(VALUE self) {
@@ -141,38 +127,24 @@ VALUE rbt_device_request_name(VALUE self) {
 }
 
 VALUE rbt_device_rssi(VALUE self) {
-    HCIDelegate *delegate;
     IOBluetoothDevice *device;
-    IOBluetoothHostController *controller;
-    IOReturn status;
+    BluetoothHCIRSSIValue rawRSSI;
+    VALUE raw_rssi;
     NSAutoreleasePool *pool;
 
     pool = [[NSAutoreleasePool alloc] init];
 
     device = rbt_device_get(self);
 
-    delegate = [[HCIDelegate alloc] init];
-    delegate.device = self;
-
-    controller = [IOBluetoothHostController defaultController];
-    [controller setDelegate: delegate];
-
-    status = [controller readRSSIForDevice: device];
-
-    if (status != noErr) {
-        [pool release];
-        return Qfalse;
-    }
-
-    CFRunLoopRun();
+    rawRSSI = [device rawRSSI];
 
     [pool release];
 
-    status = (IOReturn)NUM2INT(rb_iv_get(self, "@rssi_error"));
+    raw_rssi = INT2NUM(rawRSSI);
 
-    rbt_check_status(status, nil);
+    rb_iv_set(self, "@rssi", raw_rssi);
 
-    return rb_iv_get(self, "@rssi");
+    return raw_rssi;
 }
 
 @implementation PairingDelegate
