@@ -25,7 +25,7 @@ if Rake.const_defined? :ExtensionTask then
 
   Rake::ExtensionTask.new 'bluetooth', HOE.spec do |ext|
     ext.lib_dir = 'lib/bluetooth'
-    ext.source_pattern = '*.{c,m,h,cpp}'
+    ext.source_pattern = '**/*.{c,m,h,cpp}'
   end
 
   task test: :compile
