@@ -28,7 +28,7 @@ VALUE rbt_scan(VALUE self) {
     VALUE name = Qnil;
     const char * device_name = [[device name] UTF8String];
 
-    address = rb_str_new2([[device getAddressString] UTF8String]);
+    address = rb_str_new2([[device addressString] UTF8String]);
 
     if (device_name)
         name = rb_str_new2(device_name);
