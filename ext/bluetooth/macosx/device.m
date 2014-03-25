@@ -120,6 +120,7 @@ VALUE rbt_device_request_name(VALUE self) {
     rbt_check_status(status, pool);
 
     name = rb_str_new2([[device name] UTF8String]);
+    rb_enc_associate(name, rb_utf8_encoding());
 
     [pool release];
 
