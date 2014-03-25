@@ -5,6 +5,10 @@ Minor enhancements:
 * Device#rssi, Device#link_quality now work for OS X 10.7 and newer.
 * Removed use of deprecated methods from the OS X extension.
 
+Bug fixes:
+
+* Fixed encoding of device names.  Pull request #1 by Aaron Patterson.
+
 === 1.0
 
 * Major Enhancements
