@@ -29,9 +29,12 @@ VALUE rbt_scan(VALUE self) {
     const char * device_name = [[device name] UTF8String];
 
     address = rb_str_new2([[device addressString] UTF8String]);
+    rb_enc_associate(address, rb_utf8_encoding());
 
-    if (device_name)
+    if (device_name) {
         name = rb_str_new2(device_name);
+        rb_enc_associate(name, rb_utf8_encoding());
+    }
 
     VALUE dev = rb_funcall(rbt_cBluetoothDevice, rb_intern("new"), 2,
                            address, name);

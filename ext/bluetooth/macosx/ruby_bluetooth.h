@@ -6,6 +6,7 @@
 #import <IOBluetooth/objc/IOBluetoothHostController.h>
 
 #import <ruby.h>
+#import <ruby/encoding.h>
 
 void init_rbt_error();
 
