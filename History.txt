@@ -2,7 +2,7 @@
 
 Minor enhancements:
 
-* Bluetooth::scan now releases the GVL.
+* Bluetooth::scan now releases the GVL on OS X.
 * Device#rssi, Device#link_quality now work for OS X 10.7 and newer.
 * Removed use of deprecated methods from the OS X extension.
 
