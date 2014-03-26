@@ -1,14 +1,57 @@
 #import "ruby_bluetooth.h"
 
+struct scan_device_args {
+    IOBluetoothDevice *device;
+    VALUE devices;
+};
+
 extern VALUE rbt_cBluetoothDevice;
 
-VALUE rbt_scan(VALUE self) {
+static void
+scan_interrupt(void *ptr) {
+    BluetoothDeviceScanner *bds = (BluetoothDeviceScanner *)ptr;
+
+    [bds stopSearch];
+}
+
+static void *
+scan_add_device(void *ptr) {
+    struct scan_device_args *args = (struct scan_device_args *)ptr;
+    IOBluetoothDevice *device     = args->device;
+    VALUE name                    = Qnil;
+    const char * device_name      = [[device name] UTF8String];
+
+    VALUE address = rb_str_new2([[device addressString] UTF8String]);
+    rb_enc_associate(address, rb_utf8_encoding());
+
+    if (device_name) {
+        name = rb_str_new2(device_name);
+        rb_enc_associate(name, rb_utf8_encoding());
+    }
+
+    VALUE dev = rb_funcall(rbt_cBluetoothDevice, rb_intern("new"), 2,
+                           address, name);
+
+    rb_ary_push(args->devices, dev);
+
+    return NULL;
+}
+
+static void *
+scan_no_gvl(void *ptr) {
+    CFRunLoopRun();
+
+    return NULL;
+}
+
+VALUE
+rbt_scan(VALUE self) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     BluetoothDeviceScanner *bds = [BluetoothDeviceScanner new];
 
     [bds startSearch];
 
-    CFRunLoopRun();
+    rb_thread_call_without_gvl(scan_no_gvl, NULL, scan_interrupt, (void *)bds);
 
     [pool release];
 
@@ -24,22 +67,12 @@ VALUE rbt_scan(VALUE self) {
 
 - (void) deviceInquiryDeviceFound:(IOBluetoothDeviceInquiry*)sender
                            device:(IOBluetoothDevice*)device {
-    VALUE address;
-    VALUE name = Qnil;
-    const char * device_name = [[device name] UTF8String];
+    struct scan_device_args args;
 
-    address = rb_str_new2([[device addressString] UTF8String]);
-    rb_enc_associate(address, rb_utf8_encoding());
+    args.device = device;
+    args.devices = _devices;
 
-    if (device_name) {
-        name = rb_str_new2(device_name);
-        rb_enc_associate(name, rb_utf8_encoding());
-    }
-
-    VALUE dev = rb_funcall(rbt_cBluetoothDevice, rb_intern("new"), 2,
-                           address, name);
-
-    rb_ary_push(_devices, dev);
+    rb_thread_call_with_gvl(scan_add_device, (void *)&args);
 }
 
 - (void) deviceInquiryDeviceNameUpdated:(IOBluetoothDeviceInquiry*)sender

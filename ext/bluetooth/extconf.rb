@@ -1,5 +1,7 @@
 require 'mkmf'
 
+have_header 'ruby/thread.h'
+
 dir_config 'bluetooth'
 
 name = case RUBY_PLATFORM
